@@ -1,0 +1,115 @@
+﻿@model DemoProjectMVC.Models.Category
+
+@Html.HiddenFor(model => model.ID)
+
+@using (Html.BeginForm("Create", "Category", FormMethod.Post,new { @id="formCategory", enctype = "multipart/form-data" }))
+{
+
+            <div class="modal-body">
+                <input type="file"  name="PhotoFileName" id="uploadPhoto"/>
+                <br />
+                <div>
+                    @if (@Model.PhotoFileName == null)
+                    {
+                        <img id="showPreview" style="height:70px;width:70px" src="/Content/images/images.jpg" />
+                    }
+                    else
+                    {
+                        <img id="showPreview" style="height:70px;width:70px" src="/Upload/@Model.PhotoFileName" />
+                    }
+                    
+                </div>
+                
+                <div class="row">
+                    <div class="col-lg-6">
+                        <label>Name</label>
+                        <div>
+                            <input class="form-control" type="text" id="Name" name="Name" placeholder="Name" value="@Model.Name" />
+                        </div>
+                    </div>
+
+                </div>
+                <div class="row  pull-right">
+                    <div class="col-lg-12">
+                        <button type="button" class="btn btn-default" data-dismiss="modal" id="saveCategory">Save</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+                <br />
+            </div>
+            @*<div class="modal-footer">
+            </div>*@
+
+}
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        function readURL(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+
+                reader.onload = function (e) {
+                    $('#showPreview').attr('src', e.target.result);
+                }
+
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        $("#uploadPhoto").change(function () {
+            readURL(this);
+            var data = new FormData();
+            var files = $("#uploadPhoto").get(0).files;
+            if (files.length > 0) {
+                data.append("MyImages", files[0]);
+            }
+            $.ajax({
+                url: "/Category/UploadFile",
+                type: "POST",
+                processData: false,
+                contentType: false,
+                data: data,
+                success: function (response) {
+                    //code after success
+                    //$("#txtImg").val(response);
+                    //$("#imgPreview").attr('src', '/Upload/' + response);
+                },
+                error: function (er) {
+                    alert(er);
+                }
+
+            });
+        });
+
+
+        $("#saveCategory").on('click', function () {
+            debugger;
+            var file = $("#uploadPhoto").get(0).files;
+            debugger;
+            var src = $('#uploadPhoto').val(); // "static/images/banner/blue.jpg"
+            var tarr = src.split("\\");    
+            var filename = tarr[tarr.length - 1];
+            var data = {
+                ID: $("#ID").val(),
+                Name: $("#Name").val(),
+                PhotoFileName: filename
+            }
+            //if (file.length > 0) {
+            //    data.append("MyImages", file[0]);
+            //    data.append("ID", $("#ID").val());
+            //    data.append("Name", $("#Name").val());
+            //}
+            
+            var url = "/Category/Create";
+            debugger;
+            $.post(url,data, function (res) {
+                if (res.IsSuccess) {
+                    var table = $('#example').DataTable();
+                    table.ajax.reload();
+                }
+            })
+        })
+
+    })
+</script>
