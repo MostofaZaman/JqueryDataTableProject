@@ -37,8 +37,7 @@
                 </div>
                 <br />
             </div>
-            @*<div class="modal-footer">
-            </div>*@
+  
 
 }
 
@@ -87,7 +86,7 @@
             debugger;
             var file = $("#uploadPhoto").get(0).files;
             debugger;
-            var src = $('#uploadPhoto').val(); // "static/images/banner/blue.jpg"
+            var src = $('#uploadPhoto').val();
             var tarr = src.split("\\");    
             var filename = tarr[tarr.length - 1];
             var data = {
@@ -95,11 +94,7 @@
                 Name: $("#Name").val(),
                 PhotoFileName: filename
             }
-            //if (file.length > 0) {
-            //    data.append("MyImages", file[0]);
-            //    data.append("ID", $("#ID").val());
-            //    data.append("Name", $("#Name").val());
-            //}
+    
             
             var url = "/Category/Create";
             debugger;
